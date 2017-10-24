@@ -79,7 +79,7 @@ Main collection: ```/adress```
 				 ```/long_lat```
 				 ```/draw```
 				 
-####Give adress name
+###Give adress name
 
 * URL: /adress
 
@@ -98,7 +98,7 @@ Main collection: ```/adress```
 - curl http://127.0.0.1:5000/adress?c=Marktplatz 1
 
 
-####Set distance around adress
+###Set distance around adress
 
 * URL: /long_lat
 
