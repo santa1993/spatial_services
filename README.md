@@ -71,7 +71,7 @@ flask run
 
 ```
 
-##API Specification
+## API Specification
 
 Base Url: ```http://127.0.0.1:5000/```
 
@@ -79,7 +79,7 @@ Main collection: ```/adress```
 				 ```/long_lat```
 				 ```/draw```
 				 
-###Give adress name
+#### Give adress name
 
 * URL: /adress
 
@@ -98,7 +98,7 @@ Main collection: ```/adress```
 - curl http://127.0.0.1:5000/adress?c=Marktplatz 1
 
 
-###Set distance around adress
+#### Set distance around adress
 
 * URL: /long_lat
 
@@ -118,7 +118,7 @@ Main collection: ```/adress```
 - curl http://127.0.0.1:5000/long_lat?distanz=12000000&selectid=Aldi
 
 
-### draw marker
+#### draw marker
 
 * URL: /draw
 
