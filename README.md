@@ -27,20 +27,55 @@ A step by step series of examples that tell you have to get a development env ru
 
 Install Python27, set directories to system path
 ```
-Downloadlink: https://python-xy.github.io/downloads.html
-Directories:
+Downloadlink for Python27: https://python-xy.github.io/downloads.html
+
+Directories to system path:
 
 C:\Python27
 C:\Python27\Scripts
 C:\Python27\DLLs
 
 ```
-
-Download sptaialite 
+Download sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
+```
+extrac files and save dll flies on C:\ drive 
+set path/directory to system variable
+```
+Download sptaialite-gui https://www.gaia-gis.it/spatialite-2.3/
 
 ```
-until finished
+simply download and run the spatialite-gui, it doesn't require any installation
 ```
+
+Download sptaialite-shell "spatialite executable" here https://www.gaia-gis.it/spatialite-2.3/
+
+```
+save the spatialite shell in directory where database and dll files are
+```
+
+Install Flask 
+
+```
+virtualenv venv
+
+mkdir myproject
+
+cd myproject
+
+virtualenv venv
+
+venv\Scripts\activate
+
+pip install Flask
+
+set Flask_APP=hello_world.py
+
+set FLASK_DEBUG=1
+
+flask run
+
+```
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
@@ -97,4 +132,12 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Hat tip to anyone who's code was used
 * Inspiration
 * etc
+
+
+
+
+
+
+
+
 
