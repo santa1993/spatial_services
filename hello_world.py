@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return app.send_static_file('flask.html')   
+    return app.send_static_file('index.html')   
 
 
 DATABASE = "C:\\spatialite\\tuebingen_map.sqlite"

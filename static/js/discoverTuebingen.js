@@ -15,7 +15,7 @@ L.tileLayer( 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
 }).addTo( map );
 
 
-//zeige Koordinaten von Maus Klick
+//show coordinates on mouse click
 function onMapClick(e) {
     alert("You clicked the map at " + e.latlng);
 }
@@ -186,7 +186,7 @@ $("#ok").click(function(event) {
 
 
   
-  //POST request, send distance from search box as argument to server, in order to get all markers which are within the radius
+  //POST request, send distance from search box as argument to server
   $.ajax({
       url: 'http://127.0.0.1:5000/long_lat?' + 'distanz=' + dist + '&' + 'selectid=' + cat,
       type: "POST", 
@@ -226,14 +226,7 @@ $("#ok").click(function(event) {
   });
 
 
-  $(document).on('change','select', function (){
 
-  cat = $(this).find('option:selected').val();
-  console.log(cat);
-});
-
-
-/**/
 
 
 

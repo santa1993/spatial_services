@@ -23,14 +23,9 @@ Sqlite with Spatialite (64bit)
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
+Install Python27 https://python-xy.github.io/downloads.html, set directories to system path:
 
-Install Python27, set directories to system path
 ```
-Downloadlink for Python27: https://python-xy.github.io/downloads.html
-
-Directories to system path:
-
 C:\Python27
 C:\Python27\Scripts
 C:\Python27\DLLs
@@ -39,7 +34,7 @@ C:\Python27\DLLs
 Download sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 ```
 extrac files and save dll flies on C:\ drive 
-set path/directory to system variable
+set path to system variable
 ```
 Download sptaialite-gui https://www.gaia-gis.it/spatialite-2.3/
 
@@ -53,7 +48,7 @@ Download sptaialite-shell "spatialite executable" here https://www.gaia-gis.it/s
 save the spatialite shell in directory where database and dll files are
 ```
 
-Install Flask 
+Install Flask:
 
 ```
 virtualenv venv
@@ -68,7 +63,7 @@ venv\Scripts\activate
 
 pip install Flask
 
-set Flask_APP=hello_world.py
+set Flask_APP=api.py
 
 set FLASK_DEBUG=1
 
@@ -76,62 +71,80 @@ flask run
 
 ```
 
+##API Specification
 
-End with an example of getting some data out of the system or using it for a little demo
+Base Url: ```http://127.0.0.1:5000/```
 
-## Running the tests
+Main collection: ```/adress```
+				 ```/long_lat```
+				 ```/draw```
+				 
+####Give adress name
 
-Explain how to run the automated tests for this system
+* URL: /adress
 
-### Break down into end to end tests
+* Method: GET
 
-Explain what these tests test and why
+* Request Parameters:
 
-```
-Give an example
-```
+	- *adress:* charachter string
+	
+* Response:
 
-### And coding style tests
+	- *long lat*: charachter string
+	
+* Example:
 
-Explain what these tests test and why
+- curl http://127.0.0.1:5000/adress?c=Marktplatz 1
 
-```
-Give an example
-```
+
+####Set distance around adress
+
+* URL: /long_lat
+
+* Method: POST
+
+* Parameters:
+
+	- *distanz:* integer
+	- *cat:* charachter string
+	
+* Response:
+
+	- *long lat*: charachter string
+
+* Example:
+
+- curl http://127.0.0.1:5000/long_lat?distanz=12000000&selectid=Aldi
+
+
+### draw marker
+
+* URL: /draw
+
+* Method: POST
+
+* Request Parameters:
+
+	- *desc:* charachter string
+
+* Example:
+
+- curl http://127.0.0.1:5000/draw?desc=Taskinstraße
+
+## Backend specification
+
+wie sind files gespeichert
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+give a distance around 1200000 meter, cause data in Tübingen region is limited
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+Tahira Ullah 
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
 
 
 
