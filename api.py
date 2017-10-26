@@ -20,7 +20,7 @@ DATABASE = "C:\\spatialite\\tuebingen_map.sqlite"
 
 
 def connect_db():
-    return sqlite3.connect(DATABASE)
+    return sqlite3.connect(DATABASE, isolation_level=None)
 
 
 @app.before_request
@@ -73,12 +73,11 @@ def draw():
 	desc = request.args['desc']
 	print x,y,desc
 	conn.execute('''INSERT INTO adressen_tuebingen(node_id, streets, geometry) 
-		VALUES (default, '%s', GeomFromText('POINT(%s %s)', 3857))''' % (desc, x, y))
+		VALUES (NULL, '%s', GeomFromText('POINT(%s %s)', 3857))''' % (desc, x, y))
 	result = conn.fetchall()
 	result = json.dumps(result)
 	return result
 	
-
 
 @app.teardown_request
 def teardown_request(exception):

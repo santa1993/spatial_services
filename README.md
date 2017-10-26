@@ -12,18 +12,19 @@
 
 ### Prerequisites
 
-What things you need to run the service on Windows
+What things you need to run the service on Windows 64 bit
 
 ```
 Python27
 Flask
-Sqlite with Spatialite (64bit)
+Sqlite with Spatialite extension
 
 ```
 
 ### Installing
 
 Install Python27 https://python-xy.github.io/downloads.html, set directories to system path:
+(if you dont't have python download get-pip.py and sqlite3.dll file)
 
 ```
 C:\Python27
@@ -31,21 +32,21 @@ C:\Python27\Scripts
 C:\Python27\DLLs
 
 ```
-Download sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
+Download mod_sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 ```
 extrac files and save dll flies on C:\ drive 
 set path to system variable
 ```
-Download sptaialite-gui https://www.gaia-gis.it/spatialite-2.3/
+Download sptaialite-gui version 4.3.0  http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 
 ```
 simply download and run the spatialite-gui, it doesn't require any installation
 ```
 
-Download sptaialite-shell "spatialite executable" here https://www.gaia-gis.it/spatialite-2.3/
+Download sptaialite-shell version 4.3 "spatialite executable" here http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 
 ```
-save the spatialite shell in directory where database and dll files are
+save the spatialite spatialite-4.3.0a-win-amd64.7z  in directory where database and dll files are
 ```
 
 Install Flask:
@@ -134,7 +135,11 @@ Main collection: ```/adress```
 
 ## Backend specification
 
-wie sind files gespeichert
+create directory "myproject"
+
+install virtualenv 
+
+
 
 ## Deployment
 

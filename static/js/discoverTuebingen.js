@@ -30,13 +30,37 @@ var my_icon = L.icon({
   
 });
 
-//Icon for marker2
-var my_icon2 = L.icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Map-icon-shop.svg',
-  iconSize: [25, 32],
+//Icon for categorys
+var rewe_icon = L.icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_REWE.svg ',
+  iconSize: [25, 23],
   iconAnchor: [0, 0],
   
 });
+
+
+var aldi_icon = L.icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/64/AldiWorldwideLogo.svg',
+  iconSize: [25, 23],
+  iconAnchor: [0, 0],
+  
+});
+
+var netto_icon = L.icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Netto_logo.svg ',
+  iconSize: [25, 23],
+  iconAnchor: [0, 0],
+  
+});
+
+var edeka_icon = L.icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Logo_Edeka.svg',
+  iconSize: [25, 23],
+  iconAnchor: [0, 0],
+  
+});
+
+
 
 
 //Create variable for Leaflet.draw features
@@ -50,12 +74,20 @@ var drawControl = new L.Control.Draw({
     polygon: false,
     polyline: false,
     rectangle: false,
-    circle: false
+    circle: false,
+	marker: {
+		icon: L.icon({
+			iconUrl: 'http://cdn.mysitemyway.com/icons-watermarks/flat-circle-white-on-red/broccolidry/broccolidry_house/broccolidry_house_flat-circle-white-on-red_512x512.png',
+			iconSize: [38, 35],
+			iconAnchor: [0, 0],
+			})
+	}
   },
   edit: {
     featureGroup: drawnItems,
     edit: false
   }
+  
  
 
 });
@@ -71,14 +103,13 @@ map.on('draw:created', function (e){
 
   var tempMarker = drawnItems.addLayer(layer);
   
-
 //on mousover display popup, in order to add new address
 tempMarker.on('mouseover', function (e){
 
   var popupContent = 
 
     '<form role="form" id="form" enctype="multipart/form-data" class ="form-horizontal" >'+ 
-    '<h1>Beschreibung</h1>' +
+    '<h1>Description</h1>' +
     '<label>Adresse <input type="text" name="desc" id="desc"></label>' + '<br/>'  +
     '<button type="button" class="btn btn-warning" id="submit">Add to Database</button>'+
     '</form>';
@@ -179,7 +210,7 @@ $("#ok").click(function(event) {
       }).addTo(map);
       marker1.bindPopup("Name: " + name);
       //set view on marker 
-      //map.setView([p.y, p.x], zoom);
+      map.setView([p.y, p.x]);
       //push markers in list
       markers.push(marker1);
   
@@ -207,14 +238,49 @@ $("#ok").click(function(event) {
         geog_x = p2.x;
         geog_y= p2.y;
         //display marker on map
-        marker2 = L.marker([geog_y, geog_x], {icon: my_icon2});
-        map.addLayer(marker2);
-        marker2.bindPopup("Adresse: " + name);
-        //set view
-        //map.setView([geog_y, geog_x], zoom);
+		
+		if (name == "Aldi"){
+		
+        aldi_marker = L.marker([geog_y, geog_x], {icon: aldi_icon});
+        map.addLayer(aldi_marker);
+        aldi_marker.bindPopup("Shop: " + name);
+      
         //push displayed to list
-        markers.push(marker2);
-        }
+        markers.push(aldi_marker);
+			}
+			
+		if (name == "Netto"){
+		
+        netto_marker = L.marker([geog_y, geog_x], {icon: netto_icon});
+        map.addLayer(netto_marker);
+        netto_marker.bindPopup("Shop: " + name);
+      
+        //push displayed to list
+        markers.push(netto_marker);
+			}
+		
+		if (name == "Rewe"){
+		
+        rewe_marker = L.marker([geog_y, geog_x], {icon: rewe_icon});
+        map.addLayer(rewe_marker);
+        rewe_marker.bindPopup("Shop: " + name);
+      
+        //push displayed to list
+        markers.push(rewe_marker);
+			}
+		
+		if (name == "Edeka" || name == "E-Center"){
+		
+        edeka_marker = L.marker([geog_y, geog_x], {icon: edeka_icon});
+        map.addLayer(edeka_marker);
+        edeka_marker.bindPopup("Shop: " + name);
+      
+        //push displayed to list
+        markers.push(edeka_marker);
+			}
+			
+		}
+		
           console.log("success");
         
         },   
