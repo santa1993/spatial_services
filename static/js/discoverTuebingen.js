@@ -1,12 +1,12 @@
 
 var x,y, cat;
-var marker_x, marker_y;
+var marker_x, marker_y, roads;
 var k;
 var markers = []; 
 
  // initialize the map
-  var myCenter = new L.LatLng(48.52, 9.057);
-  var map = L.map('map', {center: myCenter, zoom: 8});
+  var myCenter = new L.LatLng(48.4738, 9.9331);
+  var map = L.map('map', {center: myCenter, zoom: 12});
 
   // load a tile layer
 L.tileLayer( 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
@@ -33,7 +33,7 @@ var my_icon = L.icon({
 //Icon for categorys
 var rewe_icon = L.icon({
   iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_REWE.svg ',
-  iconSize: [25, 23],
+  iconSize: [30, 18],
   iconAnchor: [0, 0],
   
 });
@@ -41,7 +41,7 @@ var rewe_icon = L.icon({
 
 var aldi_icon = L.icon({
   iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/64/AldiWorldwideLogo.svg',
-  iconSize: [25, 23],
+  iconSize: [30, 25],
   iconAnchor: [0, 0],
   
 });
@@ -54,13 +54,48 @@ var netto_icon = L.icon({
 });
 
 var edeka_icon = L.icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Logo_Edeka.svg',
-  iconSize: [25, 23],
+  iconUrl: 'https://vignette.wikia.nocookie.net/logopedia/images/0/00/Edeka_logo.svg/revision/latest?cb=20100710123137',
+  iconSize: [20, 23],
   iconAnchor: [0, 0],
   
 });
 
 
+
+
+$("#roads").click(function(event) {
+	
+//add streets
+	$.get("http://127.0.0.1:5000/addstreet", function( data ) {
+		
+
+		
+		roads = JSON.parse(data);
+		console.log(data);
+
+		/*features = [];
+		for (i=0; i< data.length; i++) {
+			
+			var roads = data[i][3];
+			features.push(roads);
+		}
+		console.log(features);*/
+
+		var myStyle = {
+			"color": "red",
+			"weight": 3,
+			"opacity": 0.9
+			};
+
+		L.geoJson(roads, {
+			style: myStyle
+		}).addTo(map);
+		
+	
+	});	  
+});
+
+	  
 
 
 //Create variable for Leaflet.draw features
@@ -87,9 +122,6 @@ var drawControl = new L.Control.Draw({
     featureGroup: drawnItems,
     edit: false
   }
-  
- 
-
 });
 
 map.addControl(drawControl);
@@ -179,21 +211,21 @@ $("#ok").click(function(event) {
   var text = $('#strasse').val();
   var dist = $('#dist').val();
   var cat = $('#selectid').val();
-
-
-
   var zoom = 16;
   
   //send get request to server, in order to get long lat data from adress
   $.get('http://127.0.0.1:5000/adress?' + 'c=' + text, function(data) {
 
     mydata2 = JSON.parse(data);
+	
+	
 
     for (var i = 0; i <mydata2.length; i++){ 
 
-      y = mydata2[i][1];
-      x = mydata2[i][0];
+      y = parseFloat(mydata2[i][1]);
+      x = parseFloat(mydata2[i][0]);
       name = mydata2[i][3];
+	  
     }
     //transform UTM coordinates to geographic coordinates, cause in Leaflet it is not possible to create markers with UTM coor.
     var source = new Proj4js.Proj('EPSG:3857'); 
@@ -279,10 +311,8 @@ $("#ok").click(function(event) {
         markers.push(edeka_marker);
 			}
 			
-		}
-		
+		}		
           console.log("success");
-        
         },   
       error: function(xhr) {
         console.log("leider nicht geklappt")
@@ -290,6 +320,14 @@ $("#ok").click(function(event) {
         });
     });
   });
+  
+
+  
+/////////////////////////////////////////////////////add streets//////////////////////////////////////////////////////
+
+
+
+
 
 
 
