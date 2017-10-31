@@ -15,20 +15,20 @@
 What things you need to run the service on Windows 64 bit
 
 ```
-Python27 (in order to have access to sqlite3.dll file in "C:\Python27\DLLs", otherwise download sqlite3.dll and set path to system variable)
+Python27 
 Flask
 Sqlite with Spatialite extension
-
-
-
 ```
+
+You need Python27, in order to have access to sqlite3.dll file in "C:\Python27\DLLs",
+otherwise download sqlite3.dll and set path to system variable
 
 ### Installing
 
 
 Download mod_sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 ```
-extrac files and save dll flies on C:\ drive 
+extract files and save dll flies on C:\ drive 
 set path to system variable
 ```
 Download sptaialite-gui version 4.3.0  http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
@@ -46,13 +46,6 @@ install latest version of pip 9.0.1
 ```
 C:\Python27\Scripts>easy_install -U pip 
 ```
-
-Install pip
-```
-pip install geojson 
-```
-Install Flask:
-
 Get pip package, in order to install virtualenv on windows http://flask.pocoo.org/docs/0.12/installation/#windows-easy-install
 
 ```
@@ -61,9 +54,13 @@ pip install --upgrade pip setuptools
 pip install virtualenv
 
 ```
+Install geojson, in order to create Geojson FeatureCollection from Spatialite
+```
+pip install geojson 
+```
+Install Flask:
 
 ```
-
 mkdir myproject
 
 cd myproject
