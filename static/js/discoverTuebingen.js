@@ -1,12 +1,13 @@
 
 var x,y, cat;
-var marker_x, marker_y, roads;
+var marker_x, marker_y, dist;
 var k;
 var markers = []; 
+var circles = [];
 
  // initialize the map
   var myCenter = new L.LatLng(48.4738, 9.9331);
-  var map = L.map('map', {center: myCenter, zoom: 12});
+  var map = L.map('map', {center: myCenter, zoom: 8});
 
   // load a tile layer
 L.tileLayer( 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
@@ -26,7 +27,7 @@ map.on('click', onMapClick);
 var my_icon = L.icon({
   iconUrl: 'http://cdn.mysitemyway.com/icons-watermarks/flat-circle-white-on-red/broccolidry/broccolidry_house/broccolidry_house_flat-circle-white-on-red_512x512.png',
   iconSize: [38, 35],
-  iconAnchor: [0, 0],
+  iconAnchor: [20, 20]
   
 });
 
@@ -64,11 +65,10 @@ var edeka_icon = L.icon({
 
 
 $("#roads").click(function(event) {
-	
+	var dist = $('#dist').val();
 //add streets
-	$.get("http://127.0.0.1:5000/addstreet", function( data ) {
+	$.get("http://127.0.0.1:5000/addstreet?" + 'distanz=' + dist, function( data ) {
 		
-
 		
 		roads = JSON.parse(data);
 		console.log(data);
@@ -199,6 +199,12 @@ function removeMarkers(){
     map.removeLayer(markers[i]);
     }
   }
+  
+ function removeCircles(){
+  for (i = 0; i <circles.length; i++){
+    map.removeLayer(circles[i]);
+    }
+  }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +213,7 @@ function removeMarkers(){
 $("#ok").click(function(event) {
 
   removeMarkers();
+  removeCircles();
 
   var text = $('#strasse').val();
   var dist = $('#dist').val();
@@ -218,21 +225,21 @@ $("#ok").click(function(event) {
 
     mydata2 = JSON.parse(data);
 	
-	
-
     for (var i = 0; i <mydata2.length; i++){ 
-
       y = parseFloat(mydata2[i][1]);
       x = parseFloat(mydata2[i][0]);
-      name = mydata2[i][3];
-	  
+      name = mydata2[i][3];  
     }
+	
     //transform UTM coordinates to geographic coordinates, cause in Leaflet it is not possible to create markers with UTM coor.
     var source = new Proj4js.Proj('EPSG:3857'); 
     var dest = new Proj4js.Proj('EPSG:4326');
 
     var p = new Proj4js.Point(x,y);
     Proj4js.transform(source, dest, p);
+	
+	console.log("x: " + p.x);
+	console.log("y:" + p.y);
 
       //create marker
       marker1 = L.marker([p.y, p.x], {
@@ -240,16 +247,17 @@ $("#ok").click(function(event) {
         zIndexOffset:100
 
       }).addTo(map);
-      marker1.bindPopup("Name: " + name);
+	  
+	  //create circle 
+	  var circle = L.circle([p.y, p.x], dist).addTo(map);
+	  markers.push(circle); 
       //set view on marker 
-      map.setView([p.y, p.x]);
+      //map.setView(circle);
       //push markers in list
       markers.push(marker1);
   
-
-
   
-  //POST request, send distance from search box as argument to server
+  //send distance from search box as argument to server
   $.ajax({
       url: 'http://127.0.0.1:5000/long_lat?' + 'distanz=' + dist + '&' + 'selectid=' + cat,
       type: "POST", 
@@ -263,7 +271,7 @@ $("#ok").click(function(event) {
           var y2 = mydata3[a][1];
           var x2 = mydata3[a][0];
           var name = mydata3[a][2];
-          
+		
         //transform UTM coordinates to Geographic
         var p2 = new Proj4js.Point(x2,y2);
         Proj4js.transform(source, dest, p2);
@@ -323,7 +331,6 @@ $("#ok").click(function(event) {
   
 
   
-/////////////////////////////////////////////////////add streets//////////////////////////////////////////////////////
 
 
 

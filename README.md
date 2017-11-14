@@ -20,8 +20,8 @@ Flask
 Sqlite with Spatialite extension
 ```
 
-You need Python27, in order to have access to sqlite3.dll file in "C:\Python27\DLLs",
-otherwise download sqlite3.dll and set path to system variable
+You can use Python27, in order to have access to sqlite3.dll file in "C:\Python27\DLLs",
+otherwise use sqlite3.dll in directory "sqlite3\sqlite3.dll" and set path to system variable
 
 ### Installing
 
@@ -83,9 +83,12 @@ flask run
 
 Base Url: ```http://127.0.0.1:5000/```
 
-Main collection: * ```/adress```
-				 * ```/long_lat```
-				 * ```/draw```
+Main collection: 
+* ```/adress```
+				 
+* ```/long_lat```
+				 
+* ```/draw```
 				 
 #### Give adress name
 
@@ -151,7 +154,7 @@ save api.py and static file in venv\
 
 ## Remark
 
-give a distance around 12000000 meter, cause data in Tübingen region is limited
+give a distance around 40.000 meter, cause data in Tübingen region is limited
 
 ## Authors
 

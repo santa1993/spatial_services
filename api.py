@@ -85,7 +85,7 @@ def draw():
 @app.route('/addstreet', methods=['GET', 'POST'])
 def addstreet():
 	conn = g.db.cursor()
-	conn.execute('''select id,name,sub_type, AsGeoJSON(ST_GeomFromText(geom)) as geometry FROM strassen_tu2 WHERE id="4056907" ''')
+	conn.execute(''' select id,name,sub_type, AsGeoJSON(ST_GeomFromText(geom)) as geometry FROM strassen_tu2 WHERE sub_type="path" ''')
 	# function that makes query results return lists of dictionaries instead of lists of tuples
 	def dict_factory(cursor, row):
 		d = {}
