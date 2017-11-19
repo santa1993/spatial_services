@@ -7,7 +7,7 @@ var circles = [];
 
  // initialize the map
   var myCenter = new L.LatLng(48.4738, 9.9331);
-  var map = L.map('map', {center: myCenter, zoom: 8});
+  var map = L.map('map', {center: myCenter, zoom: 11});
 
   // load a tile layer
 L.tileLayer( 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
@@ -31,40 +31,30 @@ var my_icon = L.icon({
   
 });
 
-//Icon for categorys
-var rewe_icon = L.icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_REWE.svg ',
-  iconSize: [30, 18],
-  iconAnchor: [0, 0],
-  
-});
-
-
-var aldi_icon = L.icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/64/AldiWorldwideLogo.svg',
-  iconSize: [30, 25],
-  iconAnchor: [0, 0],
-  
-});
-
-var netto_icon = L.icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Netto_logo.svg ',
-  iconSize: [25, 23],
-  iconAnchor: [0, 0],
-  
-});
-
-var edeka_icon = L.icon({
-  iconUrl: 'https://vignette.wikia.nocookie.net/logopedia/images/0/00/Edeka_logo.svg/revision/latest?cb=20100710123137',
-  iconSize: [20, 23],
-  iconAnchor: [0, 0],
-  
-});
+function getColor(name) {
+          switch (name) {
+            case 'Aldi':
+              return  'yellow';
+            case 'Edeka':
+              return 'green';
+            case 'Netto':
+              return 'orange';
+            case 'Rewe':
+              return 'grey';
+            default:
+              return 'white';
+          }
+        }
+		
+function labels (feature, layer){
+        layer.bindPopup("<p class='info header'>"+ 
+        "<b>" + feature.properties.name + "</b>" + 
+        "</p>");
+        };
 
 
 
-
-$("#roads").click(function(event) {
+/*$("#roads").click(function(event) {
 	var dist = $('#dist').val();
 //add streets
 	$.get("http://127.0.0.1:5000/addstreet?" + 'distanz=' + dist, function( data ) {
@@ -79,7 +69,7 @@ $("#roads").click(function(event) {
 			var roads = data[i][3];
 			features.push(roads);
 		}
-		console.log(features);*/
+		console.log(features);
 
 		var myStyle = {
 			"color": "red",
@@ -93,10 +83,7 @@ $("#roads").click(function(event) {
 		
 	
 	});	  
-});
-
-	  
-
+});*/
 
 //Create variable for Leaflet.draw features
 var drawnItems = new L.FeatureGroup();
@@ -172,7 +159,7 @@ $(document).delegate('#submit', 'click', function(event) {
   map.closePopup();
 
 
-//for drawed Marker, use POST request and send long lat data and argument ("desc")  to server 
+//for drawed Marker, use request and send long lat data and argument to server 
 $.ajax({
       url: 'http://127.0.0.1:5000/draw?' + 'desc=' + desc,
       type: "POST",
@@ -193,7 +180,7 @@ $.ajax({
 });
 
 
-//function, in order to remove old markers, if user searchs new address
+//remove old marker and circle
 function removeMarkers(){
   for (i = 0; i <markers.length; i++){
     map.removeLayer(markers[i]);
@@ -220,10 +207,12 @@ $("#ok").click(function(event) {
   var cat = $('#selectid').val();
   var zoom = 16;
   
-  //send get request to server, in order to get long lat data from adress
+  //send request to server, in order to get long lat data from adress
   $.get('http://127.0.0.1:5000/adress?' + 'c=' + text, function(data) {
 
     mydata2 = JSON.parse(data);
+	
+	
 	
     for (var i = 0; i <mydata2.length; i++){ 
       y = parseFloat(mydata2[i][1]);
@@ -231,7 +220,7 @@ $("#ok").click(function(event) {
       name = mydata2[i][3];  
     }
 	
-    //transform UTM coordinates to geographic coordinates, cause in Leaflet it is not possible to create markers with UTM coor.
+    //transform UTM coordinates to geographic coordinates
     var source = new Proj4js.Proj('EPSG:3857'); 
     var dest = new Proj4js.Proj('EPSG:4326');
 
@@ -248,11 +237,11 @@ $("#ok").click(function(event) {
 
       }).addTo(map);
 	  
+	  map.setView(new L.LatLng(p.y, p.x), 7);
+	  
 	  //create circle 
 	  var circle = L.circle([p.y, p.x], dist).addTo(map);
 	  markers.push(circle); 
-      //set view on marker 
-      //map.setView(circle);
       //push markers in list
       markers.push(marker1);
   
@@ -261,71 +250,58 @@ $("#ok").click(function(event) {
   $.ajax({
       url: 'http://127.0.0.1:5000/long_lat?' + 'distanz=' + dist + '&' + 'selectid=' + cat,
       type: "POST", 
-      //send x y coordinates
+      //send UTM x y coordinates
       data: {"x": x, "y": y},
       success: function(data) {
-        //get markers within radius
-        mydata3 = JSON.parse(data);
-
-        for (var a = 0; a <mydata3.length; a++){
-          var y2 = mydata3[a][1];
-          var x2 = mydata3[a][0];
-          var name = mydata3[a][2];
+		  
+		data = JSON.parse(data);
+		console.log(data);
+		var shops = L.geoJson(data).addTo(map);
 		
-        //transform UTM coordinates to Geographic
-        var p2 = new Proj4js.Point(x2,y2);
-        Proj4js.transform(source, dest, p2);
-        geog_x = p2.x;
-        geog_y= p2.y;
-        //display marker on map
+		markers.push(shops);
+	
+			},
 		
-		if (name == "Aldi"){
-		
-        aldi_marker = L.marker([geog_y, geog_x], {icon: aldi_icon});
-        map.addLayer(aldi_marker);
-        aldi_marker.bindPopup("Shop: " + name);
-      
-        //push displayed to list
-        markers.push(aldi_marker);
-			}
-			
-		if (name == "Netto"){
-		
-        netto_marker = L.marker([geog_y, geog_x], {icon: netto_icon});
-        map.addLayer(netto_marker);
-        netto_marker.bindPopup("Shop: " + name);
-      
-        //push displayed to list
-        markers.push(netto_marker);
-			}
-		
-		if (name == "Rewe"){
-		
-        rewe_marker = L.marker([geog_y, geog_x], {icon: rewe_icon});
-        map.addLayer(rewe_marker);
-        rewe_marker.bindPopup("Shop: " + name);
-      
-        //push displayed to list
-        markers.push(rewe_marker);
-			}
-		
-		if (name == "Edeka" || name == "E-Center"){
-		
-        edeka_marker = L.marker([geog_y, geog_x], {icon: edeka_icon});
-        map.addLayer(edeka_marker);
-        edeka_marker.bindPopup("Shop: " + name);
-      
-        //push displayed to list
-        markers.push(edeka_marker);
-			}
-			
-		}		
-          console.log("success");
-        },   
       error: function(xhr) {
         console.log("leider nicht geklappt")
         }
+
         });
+		
+	if( $("#selectid").val() == "All" ) {
+		$.ajax({
+			url: 'http://127.0.0.1:5000/allMarkers?' + 'distanz=' + dist,
+			type: "POST", 
+			//send UTM x y coordinates
+			data: {"x": x, "y": y},
+			success: function(data) {
+		  
+				data = JSON.parse(data);
+				console.log(data);
+				var all_shops = L.geoJson(data, {
+					pointToLayer: function (feature, latlng) {
+						return new L.CircleMarker(latlng, {radius: 6,
+														   fillOpacity: 0.8,
+														   color: getColor(feature.properties.name),
+														   weight: 1
+														   });
+					},
+					onEachFeature: labels
+			
+				}).addTo(map);
+		
+				markers.push(all_shops);
+	
+			},
+		
+		error: function(xhr) {
+			console.log("alle marker konnten nicht geladen weren")
+        }
+
+        });
+			
+		}
+		
     });
   });
   

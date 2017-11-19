@@ -32,6 +32,9 @@
         font-size: 100%;
         font-weight: bold;
     }
+	myform {
+		float:right;
+	}
 	
 	select {
     padding:7px;
@@ -57,20 +60,22 @@
 <div class="container">
 
   <h2>Bitte deinen Standort eingeben</h2>
+ 
+  
   <label>Straße &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="c" id="strasse"></label>
   <br/>
   <label>Distanz[m]<input type="distanz" name="distanz" id="dist"></label>
-  
+  <button type="button" class="btn btn-warning" id="ok">ok</button> 
   <select class="selectpicker" id="selectid" name="selectid"  >
 	  <option value="Aldi" id="ALDI"> ALDI </option>
       <option value="Rewe" id="REWE"> REWE </option>
       <option value="Netto" id="Netto"> Netto </option>
       <option value="Edeka" id="Edeka"> Edeka</option>
+	  <option value="All" id="All"> all shops</option>
   </select>
   
-  <button type="button" class="btn btn-warning" id="ok">ok</button> 
   
-  <button type="button" class="btn btn-warning" id="roads">zeige Straßen</button> 
+  <!-- <button type="button" class="btn btn-warning" id="roads">zeige Straßen</button> -->
  
   <div id="map"></div>
 
