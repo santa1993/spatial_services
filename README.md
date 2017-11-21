@@ -4,7 +4,9 @@
 
 2. The backend, selects all shops within radius from a user given location.
 
-3. Front end, allows users to enter an adress, distance and choose shop category 
+3. Front end, allows users to add an adress, distance and choose shop category 
+
+4. If user selects all shops category, a pie charts appear
 
 
 ## Installation
@@ -21,7 +23,7 @@ Sqlite with Spatialite extension
 ```
 
 You can use Python27, in order to have access to sqlite3.dll file in "C:\Python27\DLLs",
-otherwise use sqlite3.dll in directory "sqlite3\sqlite3.dll" and set path to system variable
+otherwise use sqlite3.dll in directory "sqlite3_ordner\sqlite3.dll" and set path to system variable
 
 ### Installing
 
@@ -67,8 +69,6 @@ cd myproject
 
 virtualenv venv
 
-venv\Scripts\activate
-
 pip install Flask
 
 set Flask_APP=api.py
@@ -102,7 +102,7 @@ Main collection:
 	
 * Response:
 
-	- *long lat*: float
+	- *long lat*: character string
 	
 * Example:
 
@@ -118,11 +118,11 @@ Main collection:
 * Parameters:
 
 	- *distanz:* integer
-	- *cat:* charachter string
+	- *cat:* character string
 	
 * Response:
 
-	- *long lat*: charachter string
+	- *long lat*: character string
 
 * Example:
 
@@ -154,7 +154,8 @@ save api.py and static file in venv\
 
 ## Remark
 
-give a distance around 40.000 meter, cause data in Tübingen region is limited
+* give a distance around 90.000 meter, cause data in Tübingen region is limited
+* and set current path of database
 
 ## Authors
 
