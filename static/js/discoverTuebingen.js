@@ -193,6 +193,7 @@ function removeMarkers(){
 
 // if click on ok button, get arguments
 $("#ok").click(function(event) {
+	
 
   removeMarkers();
   removeCircles();
@@ -345,7 +346,7 @@ $("#ok").click(function(event) {
 				
 				});
 				
-				$('#chart').hide();
+				
 				
 			},
 		
