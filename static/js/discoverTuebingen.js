@@ -5,6 +5,7 @@ var k;
 var markers = []; 
 var circles = [];
 
+
  // initialize the map
   var myCenter = new L.LatLng(48.4738, 9.9331);
   var map = L.map('map', {center: myCenter, zoom: 11});
@@ -34,25 +35,18 @@ var my_icon = L.icon({
 function getColor(name) {
           switch (name) {
             case 'Aldi':
-              return  'yellow';
+              return  '#ffcc00';
             case 'Edeka':
-              return 'green';
+              return '#686868';
             case 'Netto':
-              return 'orange';
+              return '#990099';
             case 'Rewe':
-              return 'grey';
+              return '#00b359';
             default:
               return 'white';
           }
         }
-		
-function labels (feature, layer){
-        layer.bindPopup("<p class='info header'>"+ 
-        "<b>" + feature.properties.name + "</b>" + 
-        "</p>");
-        };
-
-
+			
 
 /*$("#roads").click(function(event) {
 	var dist = $('#dist').val();
@@ -192,20 +186,22 @@ function removeMarkers(){
     map.removeLayer(circles[i]);
     }
   }
+  
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// if click on ok button, catch arguments
+// if click on ok button, get arguments
 $("#ok").click(function(event) {
 
   removeMarkers();
   removeCircles();
-
+  
   var text = $('#strasse').val();
   var dist = $('#dist').val();
   var cat = $('#selectid').val();
   var zoom = 16;
+  
   
   //send request to server, in order to get long lat data from adress
   $.get('http://127.0.0.1:5000/adress?' + 'c=' + text, function(data) {
@@ -256,7 +252,17 @@ $("#ok").click(function(event) {
 		  
 		data = JSON.parse(data);
 		console.log(data);
-		var shops = L.geoJson(data).addTo(map);
+		
+		var shops = L.geoJson(data, {
+						pointToLayer: function (feature, latlng) {
+							return new L.CircleMarker(latlng, {radius: 6,
+														   fillOpacity: 1,
+														   color: getColor(feature.properties.name),
+														   weight: 1
+														   });
+					}
+			
+				}).addTo(map);
 		
 		markers.push(shops);
 	
@@ -276,22 +282,71 @@ $("#ok").click(function(event) {
 			data: {"x": x, "y": y},
 			success: function(data) {
 		  
-				data = JSON.parse(data);
-				console.log(data);
-				var all_shops = L.geoJson(data, {
+				einkauf = JSON.parse(data);
+				var list_shop = [];
+				
+				
+				
+				//show diffrent color based on shop category
+				var all_shops = L.geoJson(einkauf, {
 					pointToLayer: function (feature, latlng) {
+						
 						return new L.CircleMarker(latlng, {radius: 6,
-														   fillOpacity: 0.8,
+														   fillOpacity: 1,
 														   color: getColor(feature.properties.name),
 														   weight: 1
 														   });
 					},
-					onEachFeature: labels
+					onEachFeature: function(feature,layer) {
+						list_shop.push(feature.properties.name);
+						
+					}
 			
 				}).addTo(map);
 		
 				markers.push(all_shops);
-	
+				list_shop.sort();
+				
+				//count duplicate values in array
+				var counts = {};
+				shops = [];
+				list_shop.forEach(function(x) {
+					counts[x] = (counts[x] || 0) + 1; 
+					
+				});
+				
+				//object to array
+				function objToArray(o) {
+					var piece1 = Object.keys(o);
+					var piece2 = Object.values(o);
+					var result = [];
+					
+					for (var i = 0; i <piece1.length; i++){
+						result.push([piece1[i], piece2[i]])
+					}
+					return result;
+				}
+				
+				shops = objToArray(counts);
+			
+			console.log(shops);
+		
+		//console.log(shops);
+				
+			var chart = c3.generate({
+					data: {
+						columns: shops,
+						type: 'pie'
+						
+					},
+					color: {
+						pattern: ['#ffcc00', '#686868', '#990099', '#00b359']
+					}
+				
+				});
+				
+				$('#chart').hide();
+				
 			},
 		
 		error: function(xhr) {
@@ -302,6 +357,7 @@ $("#ok").click(function(event) {
 			
 		}
 		
+
     });
   });
   

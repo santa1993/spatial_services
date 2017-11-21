@@ -60,9 +60,12 @@ def long_lat():
         IN (SELECT ROWID FROM SpatialIndex WHERE f_table_name = 'shops_tuebingen' 
         AND search_frame = Buffer(GeomFromText('POINT(%s %s)', 3857), %s)) ''' % (x, y, distanz, cat, x, y, distanz)
 	conn1.execute(q1)
+	# function that makes query results return lists of dictionaries instead of lists of tuples
 	def dict_factory(cursor, row):
 		d = {}
 		for idx,col in enumerate(cursor.description):
+			print col[0]
+			# row[0] --> geometry row[1] ---> rewe row[2]---> etc. 
 			d[col[0]] = row[idx]
 		return d
 	# apply the function to the sqlite3 engine
@@ -108,6 +111,7 @@ def allMarkers():
         IN (SELECT ROWID FROM SpatialIndex WHERE f_table_name = 'shops_tuebingen' 
         AND search_frame = Buffer(GeomFromText('POINT(%s %s)', 3857), %s)) ''' % (x, y, distanz, x, y, distanz)
 	conn1.execute(q1)
+	# function that makes query results return lists of dictionaries instead of lists of tuples
 	def dict_factory(cursor, row):
 		d = {}
 		for idx,col in enumerate(cursor.description):
