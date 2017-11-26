@@ -1,0 +1,41 @@
+############################################################tuebingen_map#####################################################
+
+#change osm data in sqlite data
+
+spatialite_osm_map -o tuebingen-regbez-latest.osm.pbf -d tuebingen_map.sqlite
+
+#add column to table pt_adresses
+
+alter table pt_addresses add column street_number varchar;
+
+#combine street and housnumber and save to table b
+
+create table b as select id,  (street || " " ||housenumber) as street_number from pt_addresses;
+
+#insert street_number column from table b in pt_addresses
+
+UPDATE pt_addresses SET street_number = (SELECT street_number from b WHERE id = pt_addresses.id);
+
+# create table adressen_tuebingen with geometry
+
+CREATE TABLE adressen_tuebingen(node_id INTEGER, streets TEXT)
+
+SELECT AddGeometryColumn('adressen_tuebingen','geometry', 3857, 'POINT', 'XY');
+
+#insert values in adressen_tuebingen from pt_addresses
+
+INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number, 
+ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;
+
+
+
+#########################################shops_tuebingen#################################################################
+
+CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
+
+SELECT AddGeometryColumn('shops_tuebingen','geometry', 3857, 'POINT', 'XY');
+
+INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, 
+ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;
+
+SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');

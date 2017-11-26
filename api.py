@@ -17,9 +17,8 @@ app = Flask(__name__)
 def index():
     return app.send_static_file('index.html')   
 
-
+# change path to database
 DATABASE = "C:\\spatialite\\tuebingen_map.sqlite"
-
 
 def connect_db():
     return sqlite3.connect(DATABASE, isolation_level=None)
@@ -64,8 +63,7 @@ def long_lat():
 	def dict_factory(cursor, row):
 		d = {}
 		for idx,col in enumerate(cursor.description):
-			print col[0]
-			# row[0] --> geometry row[1] ---> rewe row[2]---> etc. 
+			# row[0] --> geometry ,row[1] ---> rewe row[2]---> 33545. 
 			d[col[0]] = row[idx]
 		return d
 	# apply the function to the sqlite3 engine
@@ -154,14 +152,6 @@ def draw():
 	result = conn.fetchall()
 	result = json.dumps(result)
 	return result
-	
-
-
-@app.route('/addstreet', methods=['GET', 'POST'])
-def addstreet():
-	conn = g.db.cursor()
-	conn.execute(''' select id,name,sub_type, AsGeoJSON(ST_GeomFromText(geom)) as geometry FROM strassen_tu2 WHERE sub_type="path" ''')
-	# function that makes query results return lists of dictionaries instead of lists of tuples
 	
 	
 @app.teardown_request

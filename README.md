@@ -6,7 +6,7 @@
 
 3. Front end, allows users to add an adress, distance and choose shop category 
 
-4. If user selects all shops category, a pie charts appear
+4. If user selects all shops category, a pie chart appears
 
 
 ## Installation
@@ -71,6 +71,10 @@ virtualenv venv
 
 pip install Flask
 
+```
+Open cmd in \path\myproject\venv and execute service:
+
+```
 set Flask_APP=api.py
 
 set FLASK_DEBUG=1

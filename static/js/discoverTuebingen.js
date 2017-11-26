@@ -35,49 +35,17 @@ var my_icon = L.icon({
 function getColor(name) {
           switch (name) {
             case 'Aldi':
-              return  '#ffcc00';
+              return  'yellow';
             case 'Edeka':
-              return '#686868';
+              return 'green';
             case 'Netto':
-              return '#990099';
+              return 'orange';
             case 'Rewe':
-              return '#00b359';
+              return '#FE2E64';
             default:
               return 'white';
           }
         }
-			
-
-/*$("#roads").click(function(event) {
-	var dist = $('#dist').val();
-//add streets
-	$.get("http://127.0.0.1:5000/addstreet?" + 'distanz=' + dist, function( data ) {
-		
-		
-		roads = JSON.parse(data);
-		console.log(data);
-
-		/*features = [];
-		for (i=0; i< data.length; i++) {
-			
-			var roads = data[i][3];
-			features.push(roads);
-		}
-		console.log(features);
-
-		var myStyle = {
-			"color": "red",
-			"weight": 3,
-			"opacity": 0.9
-			};
-
-		L.geoJson(roads, {
-			style: myStyle
-		}).addTo(map);
-		
-	
-	});	  
-});*/
 
 //Create variable for Leaflet.draw features
 var drawnItems = new L.FeatureGroup();
@@ -122,18 +90,23 @@ tempMarker.on('mouseover', function (e){
   var popupContent = 
 
     '<form role="form" id="form" enctype="multipart/form-data" class ="form-horizontal" >'+ 
-    '<h1>Description</h1>' +
+    '<h2>Description</h2>' +
     '<label>Adresse <input type="text" name="desc" id="desc"></label>' + '<br/>'  +
     '<button type="button" class="btn btn-warning" id="submit">Add to Database</button>'+
     '</form>';
 
-  
   var popup = L.popup()
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map); 
 
   }); 
+  
+  //close all Popups
+  $("#submit").click(function(event) {
+	 console.log(event);
+	  map.closePopup();
+  });
 
   map.addLayer(layer);
 
@@ -187,13 +160,20 @@ function removeMarkers(){
     }
   }
   
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
 
-// if click on ok button, get arguments
+//  click on ok button, get arguments
 $("#ok").click(function(event) {
 	
+	if ( $("#selectid").val() == "All" ) {
+		
+	$("#chart").show();
+	}
+		
+	else {
+		$( "#chart" ).hide();
+	};
 
   removeMarkers();
   removeCircles();
@@ -202,20 +182,22 @@ $("#ok").click(function(event) {
   var dist = $('#dist').val();
   var cat = $('#selectid').val();
   var zoom = 16;
-  
-  
+ 
+
   //send request to server, in order to get long lat data from adress
   $.get('http://127.0.0.1:5000/adress?' + 'c=' + text, function(data) {
-
+	  
+	
     mydata2 = JSON.parse(data);
-	
-	
 	
     for (var i = 0; i <mydata2.length; i++){ 
       y = parseFloat(mydata2[i][1]);
       x = parseFloat(mydata2[i][0]);
       name = mydata2[i][3];  
     }
+	
+	
+            
 	
     //transform UTM coordinates to geographic coordinates
     var source = new Proj4js.Proj('EPSG:3857'); 
@@ -257,7 +239,7 @@ $("#ok").click(function(event) {
 		var shops = L.geoJson(data, {
 						pointToLayer: function (feature, latlng) {
 							return new L.CircleMarker(latlng, {radius: 6,
-														   fillOpacity: 1,
+														   fillOpacity: 0.7,
 														   color: getColor(feature.properties.name),
 														   weight: 1
 														   });
@@ -275,6 +257,7 @@ $("#ok").click(function(event) {
 
         });
 		
+	//display pie chart, if user select all
 	if( $("#selectid").val() == "All" ) {
 		$.ajax({
 			url: 'http://127.0.0.1:5000/allMarkers?' + 'distanz=' + dist,
@@ -285,21 +268,21 @@ $("#ok").click(function(event) {
 		  
 				einkauf = JSON.parse(data);
 				var list_shop = [];
-				
-				
-				
 				//show diffrent color based on shop category
 				var all_shops = L.geoJson(einkauf, {
 					pointToLayer: function (feature, latlng) {
 						
 						return new L.CircleMarker(latlng, {radius: 6,
-														   fillOpacity: 1,
+														   fillOpacity: 0.7,
 														   color: getColor(feature.properties.name),
 														   weight: 1
 														   });
 					},
 					onEachFeature: function(feature,layer) {
+						
+						
 						list_shop.push(feature.properties.name);
+						
 						
 					}
 			
@@ -337,17 +320,15 @@ $("#ok").click(function(event) {
 			var chart = c3.generate({
 					data: {
 						columns: shops,
-						type: 'pie'
-						
-					},
-					color: {
-						pattern: ['#ffcc00', '#686868', '#990099', '#00b359']
+						type: 'pie',
+						colors: {
+							Aldi: "yellow",
+							Edeka: "green",
+							Netto: "orange",
+							Rewe: "#FE2E64"
+						}
 					}
-				
-				});
-				
-				
-				
+				});	
 			},
 		
 		error: function(xhr) {
@@ -356,11 +337,20 @@ $("#ok").click(function(event) {
 
         });
 			
+		} else {
+			$( "#chart" ).hide();
+			console.log("you selected another category! NO chart")
 		}
 		
+		
 
-    });
-  });
+		});
+	
+ });
+  
+  
+  
+  
   
 
   
