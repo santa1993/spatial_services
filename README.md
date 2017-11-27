@@ -4,7 +4,7 @@
 
 2. The backend, selects all shops within radius from a user given location.
 
-3. Front end, allows users to add an adress, distance and choose shop category 
+3. Front end, allows users to add an adress, distance and chose shop category 
 
 4. If user selects all shops category, a pie chart appears
 
@@ -17,7 +17,7 @@
 What things you need to run the service on Windows 64 bit
 
 ```
-Python27 
+Python27 (if you have already installed)
 Flask
 Sqlite with Spatialite extension
 ```
@@ -75,6 +75,8 @@ pip install Flask
 Open cmd in \path\myproject\venv and execute service:
 
 ```
+Scripts\activate
+
 set Flask_APP=api.py
 
 set FLASK_DEBUG=1

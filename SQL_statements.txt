@@ -1,6 +1,9 @@
 ############################################################tuebingen_map#####################################################
 
-#change osm data in sqlite data
+#Download spatialite_osm_map-4.3.0a-win-amd64 here http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/ 
+# save it in directory xy 
+# open in xy directory cmd in windows
+# and export osm.pbf data to sqlite database via following command
 
 spatialite_osm_map -o tuebingen-regbez-latest.osm.pbf -d tuebingen_map.sqlite
 
@@ -26,7 +29,6 @@ SELECT AddGeometryColumn('adressen_tuebingen','geometry', 3857, 'POINT', 'XY');
 
 INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number, 
 ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;
-
 
 
 #########################################shops_tuebingen#################################################################
