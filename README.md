@@ -84,6 +84,14 @@ set FLASK_DEBUG=1
 flask run
 
 ```
+## Data source
+
+* get OSM datasource for Tübingen on Geofabrik http://download.geofabrik.de/europe/germany/baden-wuerttemberg/tuebingen-regbez.html 
+* use spatialite_osm_map.exe to export osm.pbf to sqlite
+
+```spatialite_osm_map -o tuebingen-regbez-latest.osm.pbf -d tuebingen_map.sqlite```
+
+* data is stored in sqlite database
 
 ## API Specification
 
@@ -160,8 +168,9 @@ save api.py and static file in venv\
 
 ## Remark
 
-* give a distance around 90.000 meter, cause data in Tübingen region is limited
-* and set current path of database
+* give a distance around 90000 meter, cause data in Tübingen region is limited
+* set current path of database
+
 
 ## Authors
 
