@@ -119,13 +119,13 @@ insert values in adressen_tuebingen from pt_addresses
 
 #### how I created "shops_tuebingen" (use spatalite-gui)
 
-```CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
+```CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);```
 
-SELECT AddGeometryColumn('shops_tuebingen','geometry', 3857, 'POINT', 'XY');
+```SELECT AddGeometryColumn('shops_tuebingen','geometry', 3857, 'POINT', 'XY');```
 
-INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;
+```INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;```
 
-SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');```
+```SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');```
 
 
 ## API Specification
