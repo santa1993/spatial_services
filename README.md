@@ -115,19 +115,17 @@ create table adressen_tuebingen with geometry
 
 insert values in adressen_tuebingen from pt_addresses
 
-```INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number, 
-ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;```
+```INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number,ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;```
 
 #### how I created "shops_tuebingen" (use spatalite-gui)
 
-``` CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
+```CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
 
 SELECT AddGeometryColumn('shops_tuebingen','geometry', 3857, 'POINT', 'XY');
 
-INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, 
-ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;
+INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;
 
-SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');  ```
+SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');```
 
 
 ## API Specification
