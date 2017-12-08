@@ -93,7 +93,7 @@ flask run
 
 ```spatialite_osm_map -o tuebingen-regbez-latest.osm.pbf -d tuebingen_map.sqlite```
 
-#### how I created "adressen_tuebingen"
+#### how I created sqlite table "adressen_tuebingen" (use spatialite-gui)
 
 add column to table pt_adresses
 
@@ -118,7 +118,7 @@ insert values in adressen_tuebingen from pt_addresses
 ```INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number, 
 ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;```
 
-#### how I created "shops_tuebingen"
+#### how I created "shops_tuebingen" (use spatalite-gui)
 
 ``` CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
 
