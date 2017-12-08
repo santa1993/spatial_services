@@ -27,7 +27,6 @@ otherwise use sqlite3.dll in directory "sqlite3_ordner\sqlite3.dll" and set path
 
 ### Installing
 
-
 Download mod_sptaialite http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/
 ```
 extract files and save dll flies on C:\ drive 
@@ -84,14 +83,52 @@ set FLASK_DEBUG=1
 flask run
 
 ```
-## Data source
+## Data source 
 
-* get OSM datasource for Tübingen on Geofabrik http://download.geofabrik.de/europe/germany/baden-wuerttemberg/tuebingen-regbez.html 
-* use spatialite_osm_map.exe to export osm.pbf to sqlite
+* get OSM datasource for Tübingen here http://download.geofabrik.de/europe/germany/baden-wuerttemberg/tuebingen-regbez.html 
+* Download spatialite_osm_map-4.3.0a-win-amd64 here http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/ 
+* save it in directory xy 
+* open in xy directory cmd in windows
+* export osm.pbf data to sqlite database via following command
 
 ```spatialite_osm_map -o tuebingen-regbez-latest.osm.pbf -d tuebingen_map.sqlite```
 
-* data is stored in sqlite database
+#### how I created "adressen_tuebingen"
+
+add column to table pt_adresses
+
+```alter table pt_addresses add column street_number varchar;```
+
+combine street and housnumber and save to table b
+
+```create table b as select id,  (street || " " ||housenumber) as street_number from pt_addresses;```
+
+insert street_number column from table b in pt_addresses
+
+```UPDATE pt_addresses SET street_number = (SELECT street_number from b WHERE id = pt_addresses.id);```
+
+create table adressen_tuebingen with geometry
+
+```CREATE TABLE adressen_tuebingen(node_id INTEGER, streets TEXT);```
+
+```SELECT AddGeometryColumn('adressen_tuebingen','geometry', 3857, 'POINT', 'XY');```
+
+insert values in adressen_tuebingen from pt_addresses
+
+```INSERT INTO adressen_tuebingen(node_id, streets,geometry) SELECT a.id,  a.street_number, 
+ST_Transform(a.Geometry, 3857) as geom FROM pt_addresses as a;```
+
+#### how I created "shops_tuebingen"
+
+``` CREATE TABLE shops_tuebingen(node_id INTEGER, name TEXT);
+
+SELECT AddGeometryColumn('shops_tuebingen','geometry', 3857, 'POINT', 'XY');
+
+INSERT INTO shops_tuebingen(node_id, name,geometry) SELECT a.id,  a.name, 
+ST_Transform(a.Geometry, 3857) as geom FROM pt_shop as a;
+
+SELECT CreateSpatialIndex('shops_tuebingen', 'geometry');  ```
+
 
 ## API Specification
 
